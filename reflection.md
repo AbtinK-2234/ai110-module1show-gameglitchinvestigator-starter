@@ -13,7 +13,8 @@ At first, the game looked fine when I ran it as I could input values into the gu
 1. One concrete bug was that if I guessed a number higher than the target, it would suggest me to guess a number even higher. Or, when I guessed a number lower than the target it would sometimes suggest a lower guess. 
 2. Another concrete bug would be that when I lost or won, and wanted to start a new game, it wouldn't work. Essentially, a new game session wouldn't start since it would be stuck at the current win/loss game. 
 3. Another bug was that I could guess a number outside of the range, and then the game would suggest to go lower. For example, I guessed -5 when I should guess a number in the range (1, 100), but the game suggested me to go lower.  
-
+4. Also, when we change the range of values to work with by selecting different modes of difficulty, the heading or prompt of the game doesn't change. It is always asking "Guess a number between 1 and 100" but with a different number of attempts. 
+5. Also I believe the ordering of the difficulties is mixed, since an easy difficulty ranges from (1,20), while normal is (1,100) and hard is (1,50) in addition to the number of attempts where easy gives less attempts than the normal difficulty. 
 ---
 
 ## 2. How did you use AI as a teammate?
