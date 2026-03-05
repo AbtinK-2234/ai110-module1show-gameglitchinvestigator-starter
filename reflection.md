@@ -8,6 +8,12 @@ Answer each question in 3 to 5 sentences. Be specific and honest about what actu
 - List at least two concrete bugs you noticed at the start  
   (for example: "the secret number kept changing" or "the hints were backwards").
 
+At first, the game looked fine when I ran it as I could input values into the guess bar as intended. However, I started to notice something was off when I exceed the range and guessed a number higher than the range and the game would suggest that I guess an even higher value. I even looked at the debug info section of the game to verify, and realized it was broken since the actual value was a much lower number than the guesses I had originally put while the game was still prompting me to guess a higher number. 
+
+1. One concrete bug was that if I guessed a number higher than the target, it would suggest me to guess a number even higher. Or, when I guessed a number lower than the target it would sometimes suggest a lower guess. 
+2. Another concrete bug would be that when I lost or won, and wanted to start a new game, it wouldn't work. Essentially, a new game session wouldn't start since it would be stuck at the current win/loss game. 
+3. Another bug was that I could guess a number outside of the range, and then the game would suggest to go lower. For example, I guessed -5 when I should guess a number in the range (1, 100), but the game suggested me to go lower.  
+
 ---
 
 ## 2. How did you use AI as a teammate?
