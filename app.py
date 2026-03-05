@@ -11,7 +11,7 @@ def get_range_for_difficulty(difficulty: str):
     return 1, 100
 
 
-def parse_guess(raw: str):
+def parse_guess(raw: str, low: int, high: int):
     if raw is None:
         return False, None, "Enter a guess."
 
@@ -26,6 +26,9 @@ def parse_guess(raw: str):
     except Exception:
         return False, None, "That is not a number."
 
+    # FIXME: Logic breaks here — no range validation allowed out-of-range guesses (e.g. -5)
+    if value < low or value > high:
+        return False, None, f"Please guess between {low} and {high}."
     return True, value, None
 
 
@@ -34,10 +37,11 @@ def check_guess(guess, secret):
         return "Win", "🎉 Correct!"
 
     try:
+        # FIXME: Logic breaks here — hint messages were reversed (Go HIGHER shown when too high, Go LOWER when too low)
         if guess > secret:
-            return "Too High", "📈 Go HIGHER!"
+            return "Too High", "📉 Go LOWER!"
         else:
-            return "Too Low", "📉 Go LOWER!"
+            return "Too Low", "📈 Go HIGHER!"
     except TypeError:
         g = str(guess)
         if g == secret:
@@ -147,7 +151,7 @@ if st.session_state.status != "playing":
 if submit:
     st.session_state.attempts += 1
 
-    ok, guess_int, err = parse_guess(raw_guess)
+    ok, guess_int, err = parse_guess(raw_guess, low, high)
 
     if not ok:
         st.session_state.history.append(raw_guess)
@@ -155,12 +159,8 @@ if submit:
     else:
         st.session_state.history.append(guess_int)
 
-        if st.session_state.attempts % 2 == 0:
-            secret = str(st.session_state.secret)
-        else:
-            secret = st.session_state.secret
-
-        outcome, message = check_guess(guess_int, secret)
+        # FIXME: Logic breaks here — secret was cast to str on even attempts, causing wrong comparisons
+        outcome, message = check_guess(guess_int, st.session_state.secret)
 
         if show_hint:
             st.warning(message)

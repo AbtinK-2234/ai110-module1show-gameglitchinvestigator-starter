@@ -3,7 +3,7 @@ def get_range_for_difficulty(difficulty: str):
     raise NotImplementedError("Refactor this function from app.py into logic_utils.py")
 
 
-def parse_guess(raw: str):
+def parse_guess(raw: str, low: int, high: int):
     """
     Parse user input into an int guess.
 
