@@ -1,72 +1,73 @@
 import random
 import streamlit as st
+from logic_utils import *
 
-def get_range_for_difficulty(difficulty: str):
-    if difficulty == "Easy":
-        return 1, 20
-    if difficulty == "Normal":
-        return 1, 100
-    if difficulty == "Hard":
-        return 1, 50
-    return 1, 100
-
-
-def parse_guess(raw: str, low: int, high: int):
-    if raw is None:
-        return False, None, "Enter a guess."
-
-    if raw == "":
-        return False, None, "Enter a guess."
-
-    try:
-        if "." in raw:
-            value = int(float(raw))
-        else:
-            value = int(raw)
-    except Exception:
-        return False, None, "That is not a number."
-
-    # FIXME: Logic breaks here — no range validation allowed out-of-range guesses (e.g. -5)
-    if value < low or value > high:
-        return False, None, f"Please guess between {low} and {high}."
-    return True, value, None
+# def get_range_for_difficulty(difficulty: str):
+#     if difficulty == "Easy":
+#         return 1, 20
+#     if difficulty == "Normal":
+#         return 1, 100
+#     if difficulty == "Hard":
+#         return 1, 50
+#     return 1, 100
 
 
-def check_guess(guess, secret):
-    if guess == secret:
-        return "Win", "🎉 Correct!"
+# def parse_guess(raw: str, low: int, high: int):
+#     if raw is None:
+#         return False, None, "Enter a guess."
 
-    try:
-        # FIXME: Logic breaks here — hint messages were reversed (Go HIGHER shown when too high, Go LOWER when too low)
-        if guess > secret:
-            return "Too High", "📉 Go LOWER!"
-        else:
-            return "Too Low", "📈 Go HIGHER!"
-    except TypeError:
-        g = str(guess)
-        if g == secret:
-            return "Win", "🎉 Correct!"
-        if g > secret:
-            return "Too High", "📈 Go HIGHER!"
-        return "Too Low", "📉 Go LOWER!"
+#     if raw == "":
+#         return False, None, "Enter a guess."
+
+#     try:
+#         if "." in raw:
+#             value = int(float(raw))
+#         else:
+#             value = int(raw)
+#     except Exception:
+#         return False, None, "That is not a number."
+
+#     # FIXME: Logic breaks here — no range validation allowed out-of-range guesses (e.g. -5)
+#     if value < low or value > high:
+#         return False, None, f"Please guess between {low} and {high}."
+#     return True, value, None
 
 
-def update_score(current_score: int, outcome: str, attempt_number: int):
-    if outcome == "Win":
-        points = 100 - 10 * (attempt_number + 1)
-        if points < 10:
-            points = 10
-        return current_score + points
+# def check_guess(guess, secret):
+#     if guess == secret:
+#         return "Win", "🎉 Correct!"
 
-    if outcome == "Too High":
-        if attempt_number % 2 == 0:
-            return current_score + 5
-        return current_score - 5
+#     try:
+#         # FIXME: Logic breaks here — hint messages were reversed (Go HIGHER shown when too high, Go LOWER when too low)
+#         if guess > secret:
+#             return "Too High", "📉 Go LOWER!"
+#         else:
+#             return "Too Low", "📈 Go HIGHER!"
+#     except TypeError:
+#         g = str(guess)
+#         if g == secret:
+#             return "Win", "🎉 Correct!"
+#         if g > secret:
+#             return "Too High", "📈 Go HIGHER!"
+#         return "Too Low", "📉 Go LOWER!"
 
-    if outcome == "Too Low":
-        return current_score - 5
 
-    return current_score
+# def update_score(current_score: int, outcome: str, attempt_number: int):
+#     if outcome == "Win":
+#         points = 100 - 10 * (attempt_number + 1)
+#         if points < 10:
+#             points = 10
+#         return current_score + points
+
+#     if outcome == "Too High":
+#         if attempt_number % 2 == 0:
+#             return current_score + 5
+#         return current_score - 5
+
+#     if outcome == "Too Low":
+#         return current_score - 5
+
+#     return current_score
 
 st.set_page_config(page_title="Glitchy Guesser", page_icon="🎮")
 
@@ -96,8 +97,10 @@ st.sidebar.caption(f"Attempts allowed: {attempt_limit}")
 if "secret" not in st.session_state:
     st.session_state.secret = random.randint(low, high)
 
+# FIXME: Logic breaks here — attempts started at 1 instead of 0, so the first guess counted as attempt 2
+#FIX: With Copilot agent mode, I updated the initialization of the "attempts" session state variable to start at 0 instead of 1. This way, the first guess will correctly count as the first attempt, and the attempt limit will be enforced accurately based on the number of guesses made.
 if "attempts" not in st.session_state:
-    st.session_state.attempts = 1
+    st.session_state.attempts = 0
 
 if "score" not in st.session_state:
     st.session_state.score = 0
@@ -110,10 +113,10 @@ if "history" not in st.session_state:
 
 st.subheader("Make a guess")
 
-st.info(
-    f"Guess a number between 1 and 100. "
-    f"Attempts left: {attempt_limit - st.session_state.attempts}"
-)
+# FIXME: Logic breaks here — range was hardcoded as "1 and 100" instead of using the actual difficulty range
+#FIX: Using Copilot Agent mode, I updated the info message to dynamically display the correct range based on the selected difficulty level (using low and high variables) instead of hardcoding "1 and 100". This ensures that the user receives accurate information about the valid guess range for the current difficulty setting.
+
+info_placeholder = st.empty()
 
 with st.expander("Developer Debug Info"):
     st.write("Secret:", st.session_state.secret)
@@ -135,9 +138,14 @@ with col2:
 with col3:
     show_hint = st.checkbox("Show hint", value=True)
 
+# FIXME: Logic breaks here — new game used hardcoded range and didn't reset status, score, or history
+#FIX: Using Copilot Agent mode, I updated the new game logic to reset all relevant session state variables (attempts, secret, status, score, history) and to use the correct range for the selected difficulty. This ensures that starting a new game properly resets the game state and uses the appropriate settings based on the difficulty level.
 if new_game:
     st.session_state.attempts = 0
-    st.session_state.secret = random.randint(1, 100)
+    st.session_state.secret = random.randint(low, high)
+    st.session_state.status = "playing"
+    st.session_state.score = 0
+    st.session_state.history = []
     st.success("New game started.")
     st.rerun()
 
@@ -148,18 +156,20 @@ if st.session_state.status != "playing":
         st.error("Game over. Start a new game to try again.")
     st.stop()
 
+# FIXME: Logic breaks here — attempts incremented before validity check, so invalid guesses wasted an attempt
+#FIX: Using Copilot Agent mode, I moved the attempts increment to after the validity check, so only valid guesses count as attempts. Invalid guesses will now show an error message without penalizing the player.
 if submit:
-    st.session_state.attempts += 1
-
     ok, guess_int, err = parse_guess(raw_guess, low, high)
 
     if not ok:
         st.session_state.history.append(raw_guess)
         st.error(err)
     else:
+        st.session_state.attempts += 1
         st.session_state.history.append(guess_int)
 
         # FIXME: Logic breaks here — secret was cast to str on even attempts, causing wrong comparisons
+        #FIX: Using Copilot Agent mode, I updated the check_guess function to ensure that both the guess and secret are compared as integers, preventing any type-related issues that could arise from casting the secret to a string on even attempts. This ensures that the game logic for determining if a guess is correct, too high, or too low works consistently regardless of the attempt number.
         outcome, message = check_guess(guess_int, st.session_state.secret)
 
         if show_hint:
@@ -186,6 +196,11 @@ if submit:
                     f"The secret was {st.session_state.secret}. "
                     f"Score: {st.session_state.score}"
                 )
+
+info_placeholder.info(
+    f"Guess a number between {low} and {high}. "
+    f"Attempts left: {attempt_limit - st.session_state.attempts}"
+)
 
 st.divider()
 st.caption("Built by an AI that claims this code is production-ready.")

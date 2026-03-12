@@ -20,17 +20,33 @@ At first, the game looked fine when I ran it as I could input values into the gu
 ## 2. How did you use AI as a teammate?
 
 - Which AI tools did you use on this project (for example: ChatGPT, Gemini, Copilot)?
+
+I primarily used Claude Code, in particular, the Opus 4.6 model. 
+
 - Give one example of an AI suggestion that was correct (including what the AI suggested and how you verified the result).
+
+One example where the AI suggestion was correct was when Claude suggested a fix to ensure the ranges of values were correctly checked. In addition to checking the actual code, created some tests to ensure that any values that went outside the proper range returned False and displayed an erro message. As a result, the test passed and I verified by playing the game.
+
 - Give one example of an AI suggestion that was incorrect or misleading (including what the AI suggested and how you verified the result).
+
+An example of when the AI was incorrect was how it structured the difficulty ranges. Instead of following the given ranges, such as (1,100) for the hard difficulty, it chose a random range like (1, 1000). I had to manually check and change the range back to (1, 100). 
 
 ---
 
 ## 3. Debugging and testing your fixes
 
 - How did you decide whether a bug was really fixed?
+I ensured the bug was fixed by first manually spot checking, then creating a test (and verified that it passed), in addition to manually playing the game and ensuring that the bug wasn't present. 
+
 - Describe at least one test you ran (manual or using pytest)  
   and what it showed you about your code.
+
+  One test I ran was for when the value taken as input was outside of the desired range: ok, value, err = parse_guess("50", 1, 100). At first the test errored, so when I worked with Claude, I was able to fix the range issue and the test passed. 
+
 - Did AI help you design or understand any tests? How?
+
+Yes it did both! I asked it to add comprehensive test cases to the tests file to document all of the fixes it made in addition to the already-given test cases. Once they passed, I had much better confidence that the app would run correctly. At the same time, I also ran the app manually and tested different edge-cases. The test-cases also revealed what values or conditions should cause an error, in which I would verify by inputting those values when I ran the app manually. 
+
 
 ---
 
