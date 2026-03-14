@@ -53,8 +53,16 @@ Yes it did both! I asked it to add comprehensive test cases to the tests file to
 ## 4. What did you learn about Streamlit and state?
 
 - In your own words, explain why the secret number kept changing in the original app.
+
+The secret number is generated using the using the randint number from random. If the range was too large, especially with respect to the difficulty, the number could change drastically.
+
 - How would you explain Streamlit "reruns" and session state to a friend who has never used Streamlit?
+
+Essentially, when you create a new game or start a new game, the game's session would be ideally restated. But with st.session_state, this allows us to have data persist or remain consistent even in cases where we have server reruns. 
+
 - What change did you make that finally gave the game a stable secret number?
+
+The only change was modifying the ranges for the difficulties to be within a stable range. However, the main reason why the secret number remained stable was becuase of it being stored in a session state. 
 
 ---
 
@@ -62,5 +70,13 @@ Yes it did both! I asked it to add comprehensive test cases to the tests file to
 
 - What is one habit or strategy from this project that you want to reuse in future labs or projects?
   - This could be a testing habit, a prompting strategy, or a way you used Git.
+
+
+One habit is to get an understanding of the codebase, and ensure that the logic of code in the files make sense. Also, whenever there are modifications, I aim to test them and ensure that they pass. 
+
 - What is one thing you would do differently next time you work with AI on a coding task?
+
+Maybe one thing that I would do differently is that once AI makes a change in which I can approve, I would ask it why it made that change and how it would change the program as a whole. 
 - In one or two sentences, describe how this project changed the way you think about AI generated code.
+
+This project allowed me to see that AI generated code can be effective, but it always needs validation. There were instances where the AI generated code did not follow my prompt exactly or made tweaks that modified some previous intentions. 
